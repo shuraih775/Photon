@@ -223,7 +223,7 @@ INFERENCE_ENABLE_LTO:BOOL=OFF
 INFERENCE_ENABLE_SANITIZERS:BOOL=OFF
 
 //Treat warnings as errors
-INFERENCE_ENABLE_WERROR:BOOL=OFF
+INFERENCE_ENABLE_WERROR:BOOL=ON
 
 //Value Computed by CMake
 InferencePlatform_BINARY_DIR:STATIC=/home/mohammed-shuraih/Desktop/Photon/build

@@ -2,6 +2,7 @@ add_library(common)
 
 target_sources(common
     PRIVATE
+        src/temp.cpp
 )
 
 target_include_directories(common
@@ -9,7 +10,3 @@ target_include_directories(common
         include
 )
 
-target_link_libraries(common
-    PUBLIC
-        common
-)

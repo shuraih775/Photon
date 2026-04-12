@@ -2,6 +2,7 @@ add_library(compute)
 
 target_sources(compute
     PRIVATE
+        src/temp.cpp
 )
 
 target_include_directories(compute

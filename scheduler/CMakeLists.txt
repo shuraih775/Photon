@@ -2,6 +2,7 @@ add_library(scheduler)
 
 target_sources(scheduler
     PRIVATE
+        src/temp.cpp
 )
 
 target_include_directories(scheduler

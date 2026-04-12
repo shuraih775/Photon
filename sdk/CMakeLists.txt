@@ -2,6 +2,7 @@ add_library(sdk)
 
 target_sources(sdk
     PRIVATE
+        src/sdk.cpp
 )
 
 target_include_directories(sdk

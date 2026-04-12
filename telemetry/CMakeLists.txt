@@ -2,6 +2,7 @@ add_library(telemetry)
 
 target_sources(telemetry
     PRIVATE
+        src/temp.cpp
 )
 
 target_include_directories(telemetry
