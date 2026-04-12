@@ -8,6 +8,8 @@
 
 namespace photon::backend {
 
+using BackendPtr = std::shared_ptr<IBackend>;
+
 class BackendRegistry {
 public:
   void registerFactory(std::unique_ptr<BackendFactory> factory) {
@@ -15,7 +17,7 @@ public:
   }
 
   [[nodiscard]]
-  std::unique_ptr<IBackend> create(const std::string &backend) const {
+  BackendPtr create(const std::string &backend) const {
     auto it = m_factories.find(backend);
 
     if (it == m_factories.end()) {
