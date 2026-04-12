@@ -13,3 +13,9 @@
 
 #include <photon/response/inference_result.hpp>
 #include <photon/response/inference_status.hpp>
+
+#include <photon/runtime/runtime.hpp>
+#include <photon/runtime/runtime_builder.hpp>
+#include <photon/runtime/runtime_config.hpp>
+
+#include <photon/errors/runtime_error.hpp>
