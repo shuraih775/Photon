@@ -5,6 +5,4 @@ add_executable(basic_inference
 target_link_libraries(basic_inference
     PRIVATE
         sdk
-        core
-        runtime
 )

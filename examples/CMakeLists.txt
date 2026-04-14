@@ -1,3 +1,4 @@
 add_library(examples INTERFACE)
 
 add_subdirectory(basic_inference)
+add_subdirectory(logistic_regression)
