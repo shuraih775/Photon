@@ -22,6 +22,20 @@ void RuntimeManager::shutdown() {}
 
 photon::model::ModelHandle RuntimeManager::registerModel(
     const photon::model::ModelDescriptor &descriptor) {
+  if (!descriptor.name().empty()) {
+    std::cout << "Registering model: " << descriptor.name() << std::endl;
+  } else {
+    std::cout << "Registering unnamed model." << std::endl;
+  }
+  if (descriptor.path().empty()) {
+    throw std::runtime_error("Model path is empty.");
+  }
+  if (descriptor.format() == photon::model::ModelFormat::Custom) {
+    throw std::runtime_error("Model format is not specified.");
+  }
+  if (!std::filesystem::exists(descriptor.path())) {
+    throw std::runtime_error("Model file does not exist.");
+  }
   photon::runtime::ExecutionEngineSelector selector;
   auto executionEngine =
       selector.select(descriptor, m_context->configuration());
