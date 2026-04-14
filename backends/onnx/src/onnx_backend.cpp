@@ -4,6 +4,7 @@
 #include <photon/core/tensor/tensor.hpp>
 
 #include <iostream>
+#include <numeric>
 #include <stdexcept>
 
 namespace photon::backend::onnx {
@@ -219,6 +220,94 @@ ONNXBackend::infer(photon::backend::ModelInstance &instance,
     for (std::size_t i = 0; i < inputs.size(); ++i) {
 
       const auto &tensor = inputs[i];
+
+      // Validate input tensor against the ONNX model.
+
+      auto inputTypeInfo = session.GetInputTypeInfo(i);
+      auto inputTensorInfo = inputTypeInfo.GetTensorTypeAndShapeInfo();
+
+      const auto expectedType = inputTensorInfo.GetElementType();
+      const auto expectedShape = inputTensorInfo.GetShape();
+
+      const auto actualType = toOrtDataType(tensor.dtype());
+      const auto actualShape = tensor.shape();
+
+      // Validate datatype.
+      if (actualType != expectedType) {
+        std::cerr << "[ONNXBackend] Input " << i
+                  << " datatype mismatch: expected "
+                  << static_cast<int>(expectedType) << ", got "
+                  << static_cast<int>(actualType) << '\n';
+
+        result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+        return result;
+      }
+
+      // Validate rank.
+      if (actualShape.size() != expectedShape.size()) {
+        std::cerr << "[ONNXBackend] Input " << i << " rank mismatch: expected "
+                  << expectedShape.size() << ", got " << actualShape.size()
+                  << '\n';
+
+        result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+        return result;
+      }
+
+      // Validate dimensions.
+      //
+      // ONNX uses -1 for dynamic dimensions.
+      // A dynamic dimension accepts any positive runtime dimension.
+      for (std::size_t dim = 0; dim < actualShape.size(); ++dim) {
+
+        const auto expectedDimension = expectedShape[dim];
+        const auto actualDimension = actualShape[dim];
+
+        if (actualDimension <= 0) {
+          std::cerr << "[ONNXBackend] Input " << i
+                    << " has invalid dimension at index " << dim << ": "
+                    << actualDimension << '\n';
+
+          result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+          return result;
+        }
+
+        // -1 means dynamic dimension.
+        if (expectedDimension == -1) {
+          continue;
+        }
+
+        if (actualDimension != expectedDimension) {
+          std::cerr << "[ONNXBackend] Input " << i
+                    << " dimension mismatch at index " << dim << ": expected "
+                    << expectedDimension << ", got " << actualDimension << '\n';
+
+          result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+          return result;
+        }
+      }
+
+      // Validate that the supplied buffer is large enough.
+      const auto elementCount = std::accumulate(
+          actualShape.begin(), actualShape.end(), std::size_t{1},
+          [](std::size_t total, int64_t dimension) {
+            return total * static_cast<std::size_t>(dimension);
+          });
+
+      const auto expectedBytes = elementCount * ortElementSize(actualType);
+
+      if (tensor.bytes() < expectedBytes) {
+        std::cerr << "[ONNXBackend] Input " << i
+                  << " buffer is too small: expected at least " << expectedBytes
+                  << " bytes, got " << tensor.bytes() << '\n';
+
+        result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+        return result;
+      }
 
       if (tensor.data() == nullptr || tensor.bytes() == 0) {
 
