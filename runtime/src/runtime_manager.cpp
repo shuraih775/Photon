@@ -75,27 +75,79 @@ photon::model::ModelHandle RuntimeManager::registerModel(
 
   return handle;
 }
-
 photon::response::InferenceResult
 RuntimeManager::infer(const photon::request::InferenceRequest &request) {
+
+  photon::response::InferenceResult result;
+
+  //  Validate model handle
+
   auto *model = m_context->model(request.model());
 
   if (!model) {
-    photon::response::InferenceResult result;
-
+    result.setModel(request.model());
     result.setStatus(photon::response::InferenceStatus::InvalidModel);
 
     return result;
   }
 
-  photon::runtime::ExecutionEngineSelector selector;
-  auto executionEngine = model->backendName();
+  result.setModel(request.model());
+
+  //  Validate request has inputs
+
+  const auto &inputs = request.inputs();
+
+  if (inputs.empty()) {
+    result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+    return result;
+  }
+
+  //  Validate tensors
+
+  for (const auto &input : inputs) {
+
+    // Tensor must contain data.
+    if (input.data() == nullptr) {
+      result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+      return result;
+    }
+
+    // Tensor must contain storage.
+    if (input.bytes() == 0) {
+      result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+      return result;
+    }
+
+    // Shape must be valid.
+    const auto &shape = input.shape();
+
+    if (shape.empty()) {
+      result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+      return result;
+    }
+
+    // Dimensions cannot be negative for a concrete tensor.
+    for (const auto dimension : shape) {
+
+      if (dimension <= 0) {
+        result.setStatus(photon::response::InferenceStatus::InvalidRequest);
+
+        return result;
+      }
+    }
+  }
+
+  // Find backend associated with this model
+
+  const auto executionEngine = model->backendName();
 
   auto *backend = m_context->backend(executionEngine);
 
   if (!backend) {
-    photon::response::InferenceResult result;
-
     result.setStatus(photon::response::InferenceStatus::BackendUnavailable);
 
     return result;
@@ -103,5 +155,4 @@ RuntimeManager::infer(const photon::request::InferenceRequest &request) {
 
   return backend->infer(*model, request);
 }
-
 } // namespace photon::runtime
