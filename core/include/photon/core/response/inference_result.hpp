@@ -6,8 +6,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include <photon/model/model_handle.hpp>
-#include <photon/response/inference_status.hpp>
+#include <photon/core/model/model_handle.hpp>
+#include <photon/core/response/inference_status.hpp>
+#include <photon/core/tensor/tensor.hpp>
 
 namespace photon::response {
 
@@ -42,12 +43,12 @@ public:
 
   // Output Buffers
 
-  void setOutputs(std::vector<std::vector<std::byte>> outputs) {
+  void setOutputs(std::vector<photon::tensor::Tensor> outputs) {
     m_outputs = std::move(outputs);
   }
 
   [[nodiscard]]
-  const std::vector<std::vector<std::byte>> &outputs() const noexcept {
+  const std::vector<photon::tensor::Tensor> &outputs() const noexcept {
     return m_outputs;
   }
 
@@ -76,7 +77,7 @@ private:
 
   photon::model::ModelHandle m_model;
 
-  std::vector<std::vector<std::byte>> m_outputs;
+  std::vector<photon::tensor::Tensor> m_outputs;
 
   std::chrono::microseconds m_latency{0};
 

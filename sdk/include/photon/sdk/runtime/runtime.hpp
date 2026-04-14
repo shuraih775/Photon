@@ -1,16 +1,19 @@
 #pragma once
 
 #include <memory>
-#include <photon/errors/runtime_error.hpp>
 #include <variant>
 
-#include <photon/model/model_descriptor.hpp>
-#include <photon/model/model_handle.hpp>
+#include <photon/core/errors/runtime_error.hpp>
+#include <photon/core/model/model_descriptor.hpp>
+#include <photon/core/model/model_handle.hpp>
+#include <photon/core/request/inference_request.hpp>
+#include <photon/core/response/inference_result.hpp>
 
-#include <photon/request/inference_request.hpp>
-#include <photon/response/inference_result.hpp>
+namespace photon::sdk::runtime {
 
-namespace photon::runtime {
+using InferenceResult = photon::response::InferenceResult;
+using InferenceRequest = photon::request::InferenceRequest;
+using RuntimeError = photon::errors::RuntimeError;
 
 class Runtime {
 public:
@@ -35,8 +38,7 @@ public:
 
 private:
   class Impl;
-
   std::unique_ptr<Impl> m_impl;
 };
 
-} // namespace photon::runtime
+} // namespace photon::sdk::runtime

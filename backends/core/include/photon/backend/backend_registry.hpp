@@ -4,12 +4,10 @@
 #include <string>
 #include <unordered_map>
 
+#include <photon/backend/backend.hpp>
 #include <photon/backend/backend_factory.hpp>
 
 namespace photon::backend {
-
-using BackendPtr = std::shared_ptr<IBackend>;
-
 class BackendRegistry {
 public:
   void registerFactory(std::unique_ptr<BackendFactory> factory) {
@@ -17,8 +15,8 @@ public:
   }
 
   [[nodiscard]]
-  BackendPtr create(const std::string &backend) const {
-    auto it = m_factories.find(backend);
+  BackendPtr create(const ExecutionEngine &exec_engine) const {
+    auto it = m_factories.find(exec_engine);
 
     if (it == m_factories.end()) {
       return nullptr;
@@ -28,7 +26,8 @@ public:
   }
 
 private:
-  std::unordered_map<std::string, std::unique_ptr<BackendFactory>> m_factories;
+  std::unordered_map<ExecutionEngine, std::unique_ptr<BackendFactory>>
+      m_factories;
 };
 
 } // namespace photon::backend

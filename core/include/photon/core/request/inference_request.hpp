@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include <photon/model/model_handle.hpp>
-#include <photon/request/request_options.hpp>
-#include <photon/tensor/tensor.hpp>
+#include <photon/core/model/model_handle.hpp>
+#include <photon/core/request/request_options.hpp>
+#include <photon/core/tensor/tensor.hpp>
 
 namespace photon::request {
 

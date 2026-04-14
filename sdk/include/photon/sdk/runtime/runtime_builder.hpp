@@ -2,13 +2,15 @@
 
 #include <vector>
 
-#include <photon/model/model_descriptor.hpp>
+#include <photon/core/model/model_descriptor.hpp>
+#include <photon/core/runtime/runtime_config.hpp>
+#include <photon/sdk/runtime/runtime.hpp>
 
-#include <photon/runtime/runtime.hpp>
-#include <photon/runtime/runtime_config.hpp>
-
-namespace photon::runtime {
-
+namespace photon::sdk::runtime {
+using RuntimeConfig = photon::runtime::RuntimeConfig;
+using ModelDescriptor = photon::model::ModelDescriptor;
+using ModelFormat = photon::model::ModelFormat;
+using ModelHandle = photon::model::ModelHandle;
 class RuntimeBuilder {
 public:
   RuntimeBuilder() = default;
@@ -33,4 +35,4 @@ private:
   std::vector<photon::model::ModelDescriptor> m_models;
 };
 
-} // namespace photon::runtime
+} // namespace photon::sdk::runtime

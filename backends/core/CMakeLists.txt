@@ -8,4 +8,5 @@ target_include_directories(backend_core
 target_link_libraries(backend_core
     INTERFACE
         common
+        core
 )

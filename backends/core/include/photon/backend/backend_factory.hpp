@@ -12,10 +12,10 @@ public:
   virtual ~BackendFactory() = default;
 
   [[nodiscard]]
-  virtual std::string backendName() const = 0;
+  virtual ExecutionEngine backendName() const = 0;
 
   [[nodiscard]]
-  virtual std::unique_ptr<IBackend> create() const = 0;
+  virtual BackendPtr create() const = 0;
 };
 
 } // namespace photon::backend

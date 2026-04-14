@@ -1,6 +1,6 @@
 #pragma once
 
-#include <photon/errors/error_code.hpp>
+#include <photon/core/errors/error_code.hpp>
 #include <stdexcept>
 #include <string>
 

@@ -3,10 +3,10 @@
 #include <string>
 #include <utility>
 
-#include <photon/model/model_handle.hpp>
-#include <photon/request/inference_request.hpp>
-#include <photon/request/request_options.hpp>
-#include <photon/tensor/tensor.hpp>
+#include <photon/core/model/model_handle.hpp>
+#include <photon/core/request/inference_request.hpp>
+#include <photon/core/request/request_options.hpp>
+#include <photon/core/tensor/tensor.hpp>
 
 namespace photon::request {
 

@@ -11,5 +11,5 @@ enum class Status {
 
   Timeout,
 
-  Cancelled
+  Cancelled,
 };

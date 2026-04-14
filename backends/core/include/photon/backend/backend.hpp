@@ -6,8 +6,8 @@
 #include <photon/backend/backend_context.hpp>
 #include <photon/backend/model_instance.hpp>
 
-#include <photon/request/inference_request.hpp>
-#include <photon/response/inference_result.hpp>
+#include <photon/core/request/inference_request.hpp>
+#include <photon/core/response/inference_result.hpp>
 
 namespace photon::backend {
 
@@ -29,5 +29,7 @@ public:
 
   virtual void shutdown() = 0;
 };
+
+using BackendPtr = std::shared_ptr<IBackend>;
 
 } // namespace photon::backend

@@ -1,12 +1,13 @@
 #pragma once
 
 #include <filesystem>
+#include <iostream>
 #include <string>
 #include <vector>
 
 #include <precision.hpp>
 
-#include <photon/model/tensor_info.hpp>
+#include <photon/core/model/tensor_info.hpp>
 
 namespace photon::model {
 
@@ -35,7 +36,10 @@ public:
     return m_path;
   }
 
-  void setPath(std::filesystem::path path) { m_path = std::move(path); }
+  void setPath(std::filesystem::path path) {
+    std::cout << "Setting model path: " << path << std::endl;
+    m_path = std::move(path);
+  }
 
   [[nodiscard]]
   ModelFormat format() const noexcept {
